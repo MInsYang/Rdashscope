@@ -1,4 +1,4 @@
-# Rdashscope
+# AI4R - Rdashscope
 
 ⭐️ **Vendor-agnostic LLM client for R** (OpenAI-compatible **Chat Completions**) with **single-cell friendly auto-formatting** (e.g., compact **Seurat** summaries).
 
