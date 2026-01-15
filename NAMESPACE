@@ -1,0 +1,13 @@
+export(singleAsk)
+export(multiAsk)
+export(new_chat)
+export(format_input)
+export(set_provider)
+export(get_provider)
+
+S3method(format_input, default)
+S3method(format_input, character)
+S3method(format_input, data.frame)
+S3method(format_input, matrix)
+S3method(format_input, dgCMatrix)
+S3method(format_input, Seurat)
