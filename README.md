@@ -15,12 +15,13 @@ Highlights:
 
 ```r
 install.packages("remotes")
-remotes::install_github("YOUR_GITHUB_ID/Rdashscope")
+remotes::install_github("MInsYang/Rdashscope") or
+devtools::install_local("Rdashscope_0.2.3.zip")
 ```
 
 ---
 
-## Quick start
+## Quick start singleAsk
 
 ```r
 library(Rdashscope)
@@ -60,6 +61,48 @@ To print HTTP request/response details (advanced):
 ```r
 # You can temporarily set verbose=TRUE by editing client.R to add req_verbose(),
 # or call the internal client directly in a dev session.
+```
+
+---
+
+## Quick start multiAsk
+
+```r
+library(Rdashscope)
+
+# 0) Choose provider + set API key (recommended via env var)
+set_provider("dashscope")
+Sys.setenv(DASHSCOPE_API_KEY = "sk-xxxx")
+
+# 1) Create a chat session
+chat <- new_chat(
+  model = "qwen-plus",  # qwen-flash
+  api_key = Sys.getenv("DASHSCOPE_API_KEY"),
+  temperature = 0.2,
+  max_tokens = 1200   # note: each vendor/model has a limit
+)
+
+# 2) Round 1 (attach an R object, auto formatted via format_input)
+ans1 <- multiAsk(
+  chat,
+  user_text = "Explain what each column means and suggest 2 suitable plots.",
+  x = head(iris, 5)
+)
+cat(ans1)
+
+# 3) Round 2 (follow-up without attaching objects)
+ans2 <- multiAsk(
+  chat,
+  user_text = "Provide executable ggplot2 code for the suggested plots."
+)
+cat(ans2)
+
+# 4) Round 3+ (keep iterating)
+ans3 <- multiAsk(
+  chat,
+  user_text = "Polish the plots (theme_bw + larger fonts) and save to a PDF."
+)
+cat(ans3)
 ```
 
 ---
