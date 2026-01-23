@@ -212,7 +212,32 @@ file.copy(ppt_path, file.path(getwd(), "iris_slides.pptx"), overwrite = TRUE)
 
 ---
 
-## 7. 常见报错
+## 7. 图片解读（本地图片 / URL 图片）
+
+### 7.1 依赖 & 注意事项
+- 本地图片：需要 `base64enc`
+- 模型必须支持“图像输入”（不同厂商/模型命名不同） 多模态模型
+- 如果模型不支持图像，它会返回类似“请提供图片/描述”的提示
+
+### Example：本地图片解读
+api_key <- Sys.getenv("DASHSCOPE_API_KEY")
+
+img_path <- "./knee1.png"
+stopifnot(file.exists(img_path))
+
+# 重要：使用支持图像输入的模型
+res <- singleAsk(
+  x = "请解读这张图：它想表达什么？有没有明显的问题？给3条改进建议。",
+  task = "分析图片并给建议",
+  model = "qwen3-vl-plus",     # qwen3-vl-flash
+  api_key = Sys.getenv("DASHSCOPE_API_KEY"),
+  images = img_path,
+  return = "text"
+)
+cat(res)
+
+---
+## 8. 常见报错
 
 - `master "Office Theme" does not exist.`：模板 master/layout 名不同（尤其 WPS），v0.3.6+ 已自动适配。
 - `lexical error: invalid character inside string`（docx）：旧版 formatter JSON 含裸换行导致解析失败，v0.3.7+ 已修复（用 paragraphs 数组）。
