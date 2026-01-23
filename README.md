@@ -1,6 +1,9 @@
-# Rdashscope
+# AI4R - Rdashscope
 
 GitHub: https://github.com/MInsYang/Rdashscope
+
+## TODO
+add agent，SKILLS ， MCP server
 
 ## v0.3.7 fix: docx JSON parsing + WPS templates
 
