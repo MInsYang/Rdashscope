@@ -1,13 +1,11 @@
 Package: Rdashscope
 Type: Package
-Title: Vendor-Agnostic LLM Chat Client for R (OpenAI-Compatible) with Single-Cell Friendly Formatters
-Version: 0.2.3
-Authors@R: c(
-    person("Your", "Name", email = "you@example.com", role = c("aut", "cre"))
-  )
-Description: Lightweight R client for calling OpenAI-compatible Chat Completions APIs from multiple vendors
-    by specifying api_key, base_url, and model. Includes class-aware input formatters for single-cell workflows
-    (e.g., compact Seurat summaries), plus singleAsk() and multiAsk() helpers for one-shot and multi-turn chats.
+Title: Vendor-Agnostic LLM Chat Client for R (OpenAI-Compatible) with Auto Structured Returns and One-Click Document Export
+Version: 0.3.7
+Authors@R: c(person("Ming","Yann", email="you@example.com", role=c("aut","cre")))
+Description: Vendor-agnostic OpenAI-compatible Chat Completions client for R with class-aware input formatting,
+    one-shot and multi-turn helpers, auto return inference, optional second-pass formatting to code/function/markdown/data.frame/list,
+    and one-click document export to pptx/docx/xlsx when suggested packages are installed.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -15,8 +13,10 @@ RoxygenNote: 7.3.2
 Imports:
     httr2,
     jsonlite,
-    utils,
-    stats
+    utils
 Suggests:
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+    Matrix,
+    Seurat,
+    base64enc,
+    officer,
+    openxlsx
