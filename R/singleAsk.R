@@ -1,33 +1,26 @@
-#' Ask the model once (one-shot)
-#'
-#' @param x Any R object (data.frame, Seurat, character, list, ...).
-#' @param task What you want the model to do.
-#' @param model Model name (vendor-specific).
-#' @param system_prompt System instruction.
-#' @param return 'text' (default) or 'raw' (full JSON response).
-#' @param ... Passed to the HTTP client (e.g., temperature, max_tokens, timeout_s, api_key, base_url).
-#' @return A character string (or a raw response list if return="raw").
-#' @export
 singleAsk <- function(x,
                       task,
                       model = "qwen-plus",
-                      system_prompt = "You are a senior single-cell bioinformatics assistant. Be concise, correct, and give executable R code when helpful.",
-                      return = c("text", "raw"),
+                      api_key = Sys.getenv("DASHSCOPE_API_KEY"),
+                      base_url = getOption("llm.base_url", getOption("dashscope.base_url","https://dashscope.aliyuncs.com/compatible-mode/v1")),
+                      images = NULL,
+                      return = c("auto","text","code","function","markdown","dataframe","list","pptx","docx","xlsx","both","raw"),
+                      formatter_model = model,
+                      system_prompt = "You are a senior data analysis assistant. Be concise and give executable R code when helpful.",
+                      pptx_template = NULL,
                       ...) {
   return <- match.arg(return)
 
   payload <- format_input(x)
-  user_content <- paste0(
-    "### Task\n", task, "\n\n",
-    "### Input (auto-formatted)\n", payload
-  )
+  user_text <- paste0("### Task\n", task, "\n\n### Input (auto-formatted)\n", payload)
+  content <- build_content(user_text, images=images)
 
-  messages <- list(
-    list(role = "system", content = system_prompt),
-    list(role = "user", content = user_content)
-  )
+  messages <- list(list(role="system", content=system_prompt),
+                   list(role="user", content=content))
 
-  resp <- dashscope_chat_completions(messages = messages, model = model, ...)
-  if (return == "raw") return(resp)
-  dashscope_extract_text(resp)
+  resp <- llm_chat_completions(messages=messages, model=model, api_key=api_key, base_url=base_url, ...)
+  if (return=="raw") return(resp)
+  txt <- llm_extract_text(resp)
+
+  postprocess_reply(txt, return=return, formatter_model=formatter_model, api_key=api_key, base_url=base_url, pptx_template=pptx_template)
 }
